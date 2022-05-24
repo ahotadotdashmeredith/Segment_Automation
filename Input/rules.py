@@ -1,13 +1,17 @@
 import pandas as pd
+from pathlib import Path
 
-def readInputExcelSheet(sheetName, path='C:\\Users\\ahota\\Documents\\Work\\Selenium\\GA\\inputRules\\Rules.xlsx'):
+
+
+def readInputExcelSheet(sheetName, parPath, relPath='Files\\InputRules\\Rules.xlsx'):
+    path = (parPath/relPath)
     excel_data = pd.read_excel(path, sheetName)
     df = pd.DataFrame(excel_data)
     return df
 
 
-def creatingListIndex(sheetName):
-    df = readInputExcelSheet(sheetName)
+def creatingListIndex(sheetName, parPath):
+    df = readInputExcelSheet(sheetName, parPath)
     #list giving information as to how many paramters each event has in the input-Rules file
     eventParametersIndex = []
     for i in range(len(df[df.columns[0]])):
@@ -18,9 +22,9 @@ def creatingListIndex(sheetName):
     return df, eventParametersIndex
 
 
-def readingInput(sheetName):
+def readingInput(sheetName, parPath):
     inputData = {}
-    df, eventParametersIndex = creatingListIndex(sheetName)
+    df, eventParametersIndex = creatingListIndex(sheetName, parPath)
     for i in range(0, len(eventParametersIndex)):
         tempPropertyObj = {}
 
@@ -48,5 +52,4 @@ def readingInput(sheetName):
     return inputData
 
 if __name__=='__main__':
-    inputData = readingInput('HealthArticleRules')
-    print(inputData)
+    print(readInputExcelSheet('BIO'))

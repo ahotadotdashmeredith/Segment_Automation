@@ -1,12 +1,10 @@
 import pandas as pd
+from pathlib import Path
 
-
-def readingUrls(path='C:\\Users\\ahota\\Documents\\Work\\Selenium\\GA\\Urls\\InputUrls.xlsx'):
-    excel_data = pd.read_excel(path)
+def readingUrls(sheetName, parPath, relPath='Files\\Urls\\InputUrls.xlsx'):
+    path = (parPath/relPath)
+    excel_data = pd.read_excel(path, sheetName)
     df = pd.DataFrame(excel_data)
-    url = ''
-    pageType = ''
-    viewType = ''
     userInput = []
 
     for i in range(1, len(df)):
@@ -18,16 +16,16 @@ def readingUrls(path='C:\\Users\\ahota\\Documents\\Work\\Selenium\\GA\\Urls\\Inp
         else:
             viewType = str(df['viewType'][i])
 
-        eventFile = brand+pageType+viewType+"Events"
-        rulesFile = brand+pageType+viewType+"Rules"
+        brand = brand
+        file = pageType+viewType
         resultFile = brand+pageType+viewType+"Result"
-        input = (url, eventFile, rulesFile, resultFile)
+        input = (url, brand, file, resultFile)
         userInput.append(input)
 
     return userInput
 
-# if __name__=="__main__":
-#     userInput = readingUrls()
-#     print(userInput)
+if __name__=="__main__":
+    userInput = readingUrls('Sheet1')
+    print(userInput)
 
 

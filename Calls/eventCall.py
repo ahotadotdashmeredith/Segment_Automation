@@ -2,16 +2,18 @@ import pandas as pd
 from selenium.webdriver.common.action_chains import ActionChains
 import time
 from selenium.webdriver.common.by import By
+from pathlib import Path
 
-def readingEventInput(sheetName, path='C:\\Users\\ahota\\Documents\\Work\\Selenium\\GA\\Events\\Events.xlsx'):
+def readingEventInput(sheetName, parPath, relpath='Files\\Events\\Events.xlsx'):
+    path = (parPath / relpath)
     excel_data = pd.read_excel(path, sheetName)
     df = pd.DataFrame(excel_data)
     df = df.fillna(0)
     return df
 
 
-def performingEvent(driver, inputUrl, sheetName):
-    df = readingEventInput(sheetName)
+def performingEvent(driver, inputUrl, sheetName, parPath):
+    df = readingEventInput(sheetName, parPath)
     for i in range(1, len(df)):
         className = df['className'][i]
         scroll = df['Scroll'][i]
@@ -37,4 +39,7 @@ def performingEvent(driver, inputUrl, sheetName):
         except:
             print('Error in Event')
     return driver
+
+if __name__=='__main__':
+    print(readingEventInput(Path.cwd().parent, 'BIO'))
 

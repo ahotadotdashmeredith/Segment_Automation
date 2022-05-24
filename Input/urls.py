@@ -18,7 +18,7 @@ def readingUrls(sheetName, parPath, relPath='Files\\Urls\\InputUrls.xlsx'):
 
         brand = brand
         file = pageType+viewType
-        resultFile = brand+pageType+viewType+"Result"
+        resultFile = brand+pageType+viewType
         input = (url, brand, file, resultFile)
         userInput.append(input)
 

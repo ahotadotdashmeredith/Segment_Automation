@@ -1,8 +1,11 @@
 import re
 
 def dataTypeValidation(capturedValue, expectedValue):
+    #If value captured is empty
+    if(len(capturedValue)==0):
+        return "Error", 'Value Empty'
     #If data type matches
-    if (expectedValue == type(capturedValue).__name__):
+    elif (expectedValue == type(capturedValue).__name__):
         return "No Error", ''
     #if data type doesn't match
     else:
@@ -11,8 +14,11 @@ def dataTypeValidation(capturedValue, expectedValue):
 
 
 def dataValueValidation(capturedValue, expectedValue):
+    #If value captured is empty
+    if(len(capturedValue)==0):
+        return "Error", 'Value Empty'
     #If data value matches
-    if (capturedValue == expectedValue):
+    elif (str(capturedValue) == str(expectedValue)):
         return "No Error", ''
     #If data value doesn't match
     else:
@@ -21,11 +27,15 @@ def dataValueValidation(capturedValue, expectedValue):
 
 
 def dataFormatValidation(capturedValue, expectedValue):
-    print(capturedValue)
-    print(expectedValue)
+    #If value captured is empty
+    if(len(capturedValue)==0):
+        return "Error", 'Value Empty'
     #The format is correct i.e. string matches
-    if re.fullmatch(expectedValue, str(capturedValue)) is not None:
+    elif re.fullmatch(str(expectedValue), str(capturedValue)) is not None:
         return "No Error", ''
     #the parameter value does not match the format
     else:
         return "Error", 'Format Mismatch'
+
+if __name__=='__main__':
+    print(dataTypeValidation('1000028', 'int'))

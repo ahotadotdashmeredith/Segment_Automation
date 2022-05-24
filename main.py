@@ -30,5 +30,5 @@ if __name__=="__main__":
 
         sheet = wb.add_sheet(resultFile)
         sheet = writingData(sheet, eventObj)
-        output = saveExcelFile(wb)
+        output = saveExcelFile(wb, parPath)
         print(output)

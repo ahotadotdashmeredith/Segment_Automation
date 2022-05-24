@@ -1,7 +1,31 @@
 import pandas as pd
 from pathlib import Path
 
+def readInputGeneralExcelSheet(parPath, relPath='Files\\InputRules\\Rules.xlsx'):
+    sheetName = 'GENERAL'
+    path = (parPath/relPath)
+    excel_data = pd.read_excel(path, sheetName)
+    df = pd.DataFrame(excel_data)
+    return df
 
+def readingInputGeneral(parPath):
+    inputData = {}
+    df = readInputGeneralExcelSheet(parPath)
+    tempPropertyObj = {}
+    for i in range(0, len(df)):
+        property = df[df.columns[0]][i]
+        tempObj = {'requirement': df.iloc[i][1], 'problemType' : df.iloc[i][2]}
+        if(tempObj['problemType']=='Data Type'):
+            tempObj['expectedValue'] = df.iloc[i][3]
+        elif (tempObj['problemType'] == 'Data Value'):
+            tempObj['expectedValue'] = df.iloc[i][4]
+        else:
+            tempObj['expectedValue'] = df.iloc[i][5]
+        tempPropertyObj[property] = tempObj
+
+        inputData['pageview'] = tempPropertyObj
+
+    return inputData
 
 def readInputExcelSheet(sheetName, parPath, relPath='Files\\InputRules\\Rules.xlsx'):
     path = (parPath/relPath)
@@ -23,19 +47,16 @@ def creatingListIndex(sheetName, parPath):
 
 
 def readingInput(sheetName, parPath):
-    inputData = {}
     df, eventParametersIndex = creatingListIndex(sheetName, parPath)
+    inputData = {}
     for i in range(0, len(eventParametersIndex)):
         tempPropertyObj = {}
-
         eventType = df[df.columns[0]][eventParametersIndex[i]]
-
         finalPropertyIndex = 0
         if(i==len(eventParametersIndex)-1):
             finalPropertyIndex = df[df.columns[1]].count()
         else:
             finalPropertyIndex = eventParametersIndex[i+1]
-
         for j in range(eventParametersIndex[i], finalPropertyIndex):
             property = df[df.columns[1]][j]
             tempObj = {'requirement': df.iloc[j][2], 'problemType' : df.iloc[j][3]}
@@ -46,10 +67,19 @@ def readingInput(sheetName, parPath):
             else:
                 tempObj['expectedValue'] = df.iloc[j][6]
             tempPropertyObj[property] = tempObj
-
         inputData[eventType] = tempPropertyObj
+
+    generalInput = readingInputGeneral(parPath)
+    tempPageviewObj = inputData.get('pageview')
+    for i,j in generalInput['pageview'].items():
+        tempPageviewObj[i] = j
+    inputData['pageview'] = tempPageviewObj
 
     return inputData
 
 if __name__=='__main__':
-    print(readInputExcelSheet('BIO'))
+    parPath = Path.cwd().parent
+    # userInput = readInputGeneralExcelSheet(parPath)
+    # print(userInput)
+    # print(readingInputGeneral(parPath))
+    print(readingInput('BIO',parPath))

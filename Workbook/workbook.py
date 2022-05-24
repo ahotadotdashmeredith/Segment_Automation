@@ -35,9 +35,9 @@ def writingData(sheet, eventObj):
                 else:
                     sheet.write(i, 2, eventObj[parameters[eventIndex]][j]['errorCheck'])
                 #Captured Value
-                sheet.write(i, 3, eventObj[parameters[eventIndex]][j]['capturedValue'])
+                sheet.write(i, 3, str(eventObj[parameters[eventIndex]][j]['capturedValue']))
                 #Expected Value
-                sheet.write(i, 4, eventObj[parameters[eventIndex]][j]['expectedValue'])
+                sheet.write(i, 4, str(eventObj[parameters[eventIndex]][j]['expectedValue']))
                 i = i + 1
             eventIndex = eventIndex+1
     except:
@@ -45,9 +45,10 @@ def writingData(sheet, eventObj):
     return sheet
 
 
-def saveExcelFile(wb, path='C:\\Users\\ahota\\Documents\\Work\\Selenium\\GA\\Result\\Result.xls'):
+def saveExcelFile(wb, parPath, relPath='Files\\Result\\Result.xls'):
     output = ''
     try:
+        path = (parPath / relPath)
         wb.save(path)
         output = "File Saved"
     except:

@@ -17,18 +17,16 @@ if __name__=="__main__":
     wb = Workbook()
     userInput = readingUrls('Sheet1', parPath)
     for i in userInput:
-        inputUrl, brand, file, resultFile = i
-        inputData = readingInput(file, parPath)
+        inputUrl, brand, rulesSheet, viewType, resultSheet = i
+        inputData = readingInput(rulesSheet, parPath, viewType)
         driver = driverCall()
-
         driver = pageCall(driver, inputUrl)
-        driver = performingEvent(driver, inputUrl, file, parPath)
-        driver = finalCall(driver, inputUrl)
+        driver = performingEvent(driver, inputUrl, rulesSheet, viewType, parPath)
+        # driver = finalCall(driver, inputUrl)
         gaCalls = gettingGaNetworkCalls(driver)
         eventCalls = gettingEventCalls(gaCalls, inputData)
         eventObj = validation(eventCalls, inputData)
-
-        sheet = wb.add_sheet(resultFile)
+        sheet = wb.add_sheet(resultSheet)
         sheet = writingData(sheet, eventObj)
         output = saveExcelFile(wb, parPath)
         print(output)

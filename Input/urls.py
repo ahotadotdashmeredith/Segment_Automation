@@ -17,9 +17,9 @@ def readingUrls(sheetName, parPath, relPath='Files\\Urls\\InputUrls.xlsx'):
             viewType = str(df['viewType'][i])
 
         brand = brand
-        file = pageType+viewType
+        file = pageType
         resultFile = brand+pageType+viewType
-        input = (url, brand, file, resultFile)
+        input = (url, brand, file, viewType, resultFile)
         userInput.append(input)
 
     return userInput

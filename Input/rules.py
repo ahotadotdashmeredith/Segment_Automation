@@ -1,33 +1,29 @@
 import pandas as pd
 from pathlib import Path
 
-def readInputGeneralExcelSheet(parPath, relPath='Files\\InputRules\\Rules.xlsx'):
-    sheetName = 'GENERAL'
-    path = (parPath/relPath)
-    excel_data = pd.read_excel(path, sheetName)
-    df = pd.DataFrame(excel_data)
-    return df
 
-def readingInputGeneral(parPath):
-    inputData = {}
-    df = readInputGeneralExcelSheet(parPath)
+def readingPropertyRules(df, start, end, k):
     tempPropertyObj = {}
-    for i in range(0, len(df)):
-        property = df[df.columns[0]][i]
-        tempObj = {'requirement': df.iloc[i][1], 'problemType' : df.iloc[i][2]}
-        if(tempObj['problemType']=='Data Type'):
-            tempObj['expectedValue'] = df.iloc[i][3]
+    for i in range(start, end):
+        property = df[df.columns[k]][i]
+        tempObj = {'requirement': df.iloc[i][k+1], 'problemType': df.iloc[i][k+2]}
+        if (tempObj['problemType'] == 'Data Type'):
+            tempObj['expectedValue'] = df.iloc[i][k+3]
         elif (tempObj['problemType'] == 'Data Value'):
-            tempObj['expectedValue'] = df.iloc[i][4]
+            tempObj['expectedValue'] = df.iloc[i][k+4]
         else:
-            tempObj['expectedValue'] = df.iloc[i][5]
+            tempObj['expectedValue'] = df.iloc[i][k+5]
         tempPropertyObj[property] = tempObj
+    return tempPropertyObj
 
-        inputData['pageview'] = tempPropertyObj
 
-    return inputData
+def readingInputSheet(sheetName, parPath):
+    df = readSheetAsDf(sheetName, parPath)
+    tempPropertyObj = readingPropertyRules(df, 0, len(df), 0)
+    return tempPropertyObj
 
-def readInputExcelSheet(sheetName, parPath, relPath='Files\\InputRules\\Rules.xlsx'):
+
+def readSheetAsDf(sheetName, parPath, relPath='Files\\InputRules\\Rules.xlsx'):
     path = (parPath/relPath)
     excel_data = pd.read_excel(path, sheetName)
     df = pd.DataFrame(excel_data)
@@ -35,8 +31,8 @@ def readInputExcelSheet(sheetName, parPath, relPath='Files\\InputRules\\Rules.xl
 
 
 def creatingListIndex(sheetName, parPath):
-    df = readInputExcelSheet(sheetName, parPath)
-    #list giving information as to how many paramters each event has in the input-Rules file
+    df = readSheetAsDf(sheetName, parPath)
+    #list giving information as to how many parameters each event has in the input-Rules file
     eventParametersIndex = []
     for i in range(len(df[df.columns[0]])):
         if(str(df[df.columns[0]][i])=='nan'):
@@ -46,40 +42,47 @@ def creatingListIndex(sheetName, parPath):
     return df, eventParametersIndex
 
 
-def readingInput(sheetName, parPath):
-    df, eventParametersIndex = creatingListIndex(sheetName, parPath)
+def readingMainSheetData(df, eventParametersIndex):
     inputData = {}
     for i in range(0, len(eventParametersIndex)):
-        tempPropertyObj = {}
         eventType = df[df.columns[0]][eventParametersIndex[i]]
         finalPropertyIndex = 0
-        if(i==len(eventParametersIndex)-1):
+        if (i == len(eventParametersIndex) - 1):
             finalPropertyIndex = df[df.columns[1]].count()
         else:
-            finalPropertyIndex = eventParametersIndex[i+1]
-        for j in range(eventParametersIndex[i], finalPropertyIndex):
-            property = df[df.columns[1]][j]
-            tempObj = {'requirement': df.iloc[j][2], 'problemType' : df.iloc[j][3]}
-            if(tempObj['problemType']=='Data Type'):
-                tempObj['expectedValue'] = df.iloc[j][4]
-            elif (tempObj['problemType'] == 'Data Value'):
-                tempObj['expectedValue'] = df.iloc[j][5]
-            else:
-                tempObj['expectedValue'] = df.iloc[j][6]
-            tempPropertyObj[property] = tempObj
+            finalPropertyIndex = eventParametersIndex[i + 1]
+        tempPropertyObj = readingPropertyRules(df, eventParametersIndex[i], finalPropertyIndex, 1)
         inputData[eventType] = tempPropertyObj
+    return inputData
 
-    generalInput = readingInputGeneral(parPath)
+
+def readingGeneralSheetData(inputData, parPath):
+    sheetInput = readingInputSheet('GENERAL', parPath)
     tempPageviewObj = inputData.get('pageview')
-    for i,j in generalInput['pageview'].items():
+    for i,j in sheetInput.items():
         tempPageviewObj[i] = j
     inputData['pageview'] = tempPageviewObj
-
     return inputData
+
+
+def readingVideoSheetData(inputData, parPath):
+    sheetInput = readingInputSheet('GENERALVIDEO', parPath)
+    inputData['jumpstartPlayer'] = sheetInput
+    return inputData
+
+
+def readingInput(sheetName, parPath, viewType):
+    # Reading data from intended sheet
+    df, eventParametersIndex = creatingListIndex(sheetName, parPath)
+    inputData = readingMainSheetData(df, eventParametersIndex)
+    # Adding data from General sheet
+    inputData = readingGeneralSheetData(inputData, parPath)
+    # Adding data from GENERALVIDEO sheet if page contains video
+    if (viewType=='Video'):
+        inputData = readingVideoSheetData(inputData, parPath)
+    return inputData
+
 
 if __name__=='__main__':
     parPath = Path.cwd().parent
-    # userInput = readInputGeneralExcelSheet(parPath)
-    # print(userInput)
-    # print(readingInputGeneral(parPath))
-    print(readingInput('BIO',parPath))
+    print(readingInput('BIO', parPath, 'Video'))

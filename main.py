@@ -12,7 +12,7 @@ from Workbook.workbook import writingData, saveExcelFile
 from pathlib import Path
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     parPath = Path.cwd()
     wb = Workbook()
     userInput = readingUrls('Sheet1', parPath)

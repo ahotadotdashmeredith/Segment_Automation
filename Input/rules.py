@@ -42,8 +42,9 @@ def creatingListIndex(sheetName, parPath):
     return df, eventParametersIndex
 
 
-def readingMainSheetData(df, eventParametersIndex):
-    inputData = {}
+def readingMainSheetData(df, eventParametersIndex, inputData=None):
+    if inputData is None:
+        inputData = {}
     for i in range(0, len(eventParametersIndex)):
         eventType = df[df.columns[0]][eventParametersIndex[i]]
         finalPropertyIndex = 0
@@ -66,8 +67,23 @@ def readingGeneralSheetData(inputData, parPath):
 
 
 def readingVideoSheetData(inputData, parPath):
-    sheetInput = readingInputSheet('GENERALVIDEO', parPath)
-    inputData['jumpstartPlayer'] = sheetInput
+    videoSheet = readSheetAsDf('VIDEO', parPath)
+    for i in videoSheet['Event']:
+        if str(i) == 'nan':
+            continue
+        else:
+            inputData[i] = readingInputSheet('GENERALVIDEO', parPath)
+    df, eventParametersIndex = creatingListIndex('VIDEO', parPath)
+    for i in range(0, len(eventParametersIndex)):
+        eventType = df[df.columns[0]][eventParametersIndex[i]]
+        finalPropertyIndex = 0
+        if (i == len(eventParametersIndex) - 1):
+            finalPropertyIndex = df[df.columns[1]].count()
+        else:
+            finalPropertyIndex = eventParametersIndex[i + 1]
+        tempPropertyObj = readingPropertyRules(df, eventParametersIndex[i], finalPropertyIndex, 1)
+        for i in tempPropertyObj:
+            inputData[eventType][i] = tempPropertyObj[i]
     return inputData
 
 

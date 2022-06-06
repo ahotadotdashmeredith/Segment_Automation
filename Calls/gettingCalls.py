@@ -4,7 +4,10 @@ def formattingGaCalls(gaCalls):
     for i in gaCalls:
         try:
             if (i['t'] == ['event']):
-                fmGaCalls[i['ec'][0]] = []
+                if(i['ec'][0]=='jumpstartPlayer'):
+                    fmGaCalls[i['ea'][0]] = []
+                else:
+                    fmGaCalls[i['ec'][0]] = []
         except:
             pass
     return fmGaCalls
@@ -19,7 +22,10 @@ def adddingGaCalls(gaCalls):
                 fmGaCalls.get('pageview').append(i)
                 pageDone = True
             elif (i['t'] == ['event']):
-                fmGaCalls.get(i['ec'][0]).append(i)
+                if (i['ec'][0] == 'jumpstartPlayer'):
+                    fmGaCalls.get(i['ea'][0]).append(i)
+                else:
+                    fmGaCalls.get(i['ec'][0]).append(i)
         except:
             pass
     return fmGaCalls

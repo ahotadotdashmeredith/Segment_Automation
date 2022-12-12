@@ -1,4 +1,4 @@
-from src.Validation_Functions.validateFunctions import dataFormatValidation, dataTypeValidation, dataValueValidation
+from src.validation_functions.validateFunctions import dataFormatValidation, dataTypeValidation, dataValueValidation
 
 
 def creatingEventObjForEmptyList(i, inputData):

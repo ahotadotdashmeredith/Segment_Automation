@@ -22,7 +22,7 @@ if __name__ == "__main__":
         driver = driverCall()
         driver = pageCall(driver, inputUrl)
         driver = performingEvent(driver, inputUrl, rulesSheet, viewType, parPath)
-        # driver = finalCall(driver, inputUrl)
+        driver = finalCall(driver, inputUrl)
         gaCalls = gettingGaNetworkCalls(driver)
         eventCalls = gettingEventCalls(gaCalls, inputData)
         eventObj = validation(eventCalls, inputData)

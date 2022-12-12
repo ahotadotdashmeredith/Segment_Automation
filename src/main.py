@@ -1,14 +1,14 @@
 from xlwt import Workbook
-from Input.urls import readingUrls
-from Input.rules import readingInput
-from Setup.driverSetup import driverCall
-from Calls.makingPageCall import pageCall
-from Calls.eventCall import performingEvent
-from Calls.finalCall import finalCall
-from Setup.networkCalls import gettingGaNetworkCalls
-from Calls.gettingCalls import gettingEventCalls
-from Validation.validation import validation
-from Workbook.workbook import writingData, saveExcelFile
+from src.Input.urls import readingUrls
+from src.Input.rules import readingInput
+from src.Setup.driverSetup import driverCall
+from src.Calls.makingPageCall import pageCall
+from src.Calls.eventCall import performingEvent
+from src.Calls.finalCall import finalCall
+from src.Setup.networkCalls import gettingGaNetworkCalls
+from src.Calls.gettingCalls import gettingEventCalls
+from src.Validation.validation import validation
+from src.Workbook.workbook import writingData, saveExcelFile
 from pathlib import Path
 
 
